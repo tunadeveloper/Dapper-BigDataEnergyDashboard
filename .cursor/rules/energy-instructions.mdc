@@ -1,0 +1,43 @@
+---
+description: Energy Project Rules - Dapper, Redis, SignalR Performance Stack
+globs: **/*.cs, **/*.cshtml, **/*.js
+alwaysApply: true
+---
+
+# Energy Project Constitution
+
+Sen bu projede bir "Senior Developer" yardımcısısın. Aşağıdaki kurallar kırmızı çizgidir, asla dışına çıkma.
+
+## 🏗️ Folder & File Schema
+Proje 2 katmandan oluşur (API ve UI). Klasör yapısına sadık kal:
+
+- **Energy.Api**
+  - `/Context`: Dapper Connection Factory (IDbConnection).
+  - `/Controllers`: API Endpoints.
+  - `/Entities`: Database POCO models (Region, Meter, MeterReading).
+  - `/Dtos`: Manual Mapping Records (No AutoMapper!).
+  - `/Repositories`: Dapper logic (Always use ProfiledDbConnection).
+  - `/Services`: Redis Cache-Aside logic (ICacheService).
+  - `/Hubs`: SignalR Hubs.
+  - `/Validations`: FluentValidation classes.
+  - `/Extensions`: Startup & Service registrations.
+- **Energy.UI**
+  - `/Controllers`: MVC Routes.
+  - `/Views`: Razor Views (Landing, Dashboard).
+  - `/wwwroot/js`: SignalR listeners and Chart.js logic.
+
+## 🚫 Strictly Forbidden (Kesinlikle Yasak)
+1. **Yorum Satırı:** Kod içerisinde asla açıklama satırı veya yorum (`//`, `/* */`) yazma. Kod kendi kendini anlatmalı.
+2. **Boş Kalabalık:** Gereksiz `if (obj == null)`, `try-catch` blokları veya "defensive programming" kalıpları kullanma. Sadece işin özünü yaz.
+3. **Laf Kalabalığı:** Uzun açıklamalar yapma. Sadece kodu ver, gerekirse tek cümlelik teknik bilgi ver.
+4. **Müdahale:** Sadece benden istenen görevi yap. Kodun diğer kısımlarına, stiline veya alakasız dosyalara asla dokunma.
+
+## 💻 Coding Style & Rules
+- **Consistency:** Benim yazdığım kod düzenini, isimlendirme standartlarımı camelCase ve dosya yapımı birebir kopyala.
+- **Dapper:** Sorgularda `SELECT *` kullanma. Bağlantıları `ProfiledDbConnection` ile sarmala.
+- **Redis:** Dashboard datası istenirken önce `ICacheService` kontrol et, yoksa SQL'e git.
+- **SignalR:** Anomali durumlarında `IHubContext` üzerinden anlık push mesajı gönder.
+- **Minimalism:** En az satırla en performanslı kodu üret.
+
+## 🎯 Implementation Command
+"Neyi yap" dersem sadece onu yap. Ekstra özellik ekleme, "şunu da yapsak iyi olur" deme. Sadece talimatı uygula.
