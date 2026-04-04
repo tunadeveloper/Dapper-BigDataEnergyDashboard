@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Energy.WebAPI/Energy.WebAPI.csproj" Id="63bbb03e-c148-452d-a042-1dbf3a63c2cd" />
   <Project Path="Energy.WebUI/Energy.WebUI.csproj" />
 </Solution>
