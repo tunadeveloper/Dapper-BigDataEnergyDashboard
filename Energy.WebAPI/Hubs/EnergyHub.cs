@@ -1,6 +1,8 @@
-﻿namespace Energy.WebAPI.Hubs
+﻿using Microsoft.AspNetCore.SignalR;
+
+namespace Energy.WebAPI.Hubs
 {
-    public class EnergyHub
+    public class EnergyHub : Hub
     {
     }
 }

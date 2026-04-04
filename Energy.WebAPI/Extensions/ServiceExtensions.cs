@@ -10,6 +10,7 @@ namespace Energy.WebAPI.Extensions
             var redisConfig = configuration["Redis:Configuration"];
             services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(redisConfig));
             services.AddSingleton<IRedisCacheService, RedisCacheService>();
+            services.AddSingleton<ICacheService>(sp => (ICacheService)sp.GetRequiredService<IRedisCacheService>());
             return services;
         }
     }
