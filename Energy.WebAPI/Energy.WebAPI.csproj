@@ -18,6 +18,8 @@
     <Folder Include="Controllers\" />
     <Folder Include="DTOs\MeterReadingDTOs\" />
     <Folder Include="DTOs\RegionDTOs\" />
+    <Folder Include="Repositories\MeterReadings\" />
+    <Folder Include="Repositories\Regions\" />
     <Folder Include="Validations\" />
   </ItemGroup>
 

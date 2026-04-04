@@ -1,5 +1,8 @@
 using Energy.WebAPI.Context;
 using Energy.WebAPI.Extensions;
+using Energy.WebAPI.Repositories.MeterReadings;
+using Energy.WebAPI.Repositories.Meters;
+using Energy.WebAPI.Repositories.Regions;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +11,9 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<DapperContext>();
 builder.Services.AddRedisCache(builder.Configuration);
+builder.Services.AddScoped<IMeterService, MeterService>();
+builder.Services.AddScoped<IRegionService, RegionService>();
+builder.Services.AddScoped<IMeterReadingService, MeterReadingService>();
 
 var app = builder.Build();
 
@@ -18,7 +24,7 @@ if (app.Environment.IsDevelopment())
     {
         opt
         .WithTheme(ScalarTheme.BluePlanet)
-        .WithTitle("EnergyScalar")
+        .WithTitle("EnergyAPI")
         .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
     });
 }
