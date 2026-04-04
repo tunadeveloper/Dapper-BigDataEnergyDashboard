@@ -12,12 +12,12 @@ namespace Energy.WebAPI.Controllers
     public class DashboardController : ControllerBase
     {
         private readonly IDashboardRepository _repository;
-        private readonly ICacheService _cacheService;
+        private readonly IRedisCacheService _cacheService;
         private readonly IHubContext<EnergyHub> _hubContext;
 
         public DashboardController(
             IDashboardRepository repository,
-            ICacheService cacheService,
+            IRedisCacheService cacheService,
             IHubContext<EnergyHub> hubContext)
         {
             _repository = repository;

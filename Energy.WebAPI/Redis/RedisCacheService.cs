@@ -3,7 +3,7 @@ using StackExchange.Redis;
 
 namespace Energy.WebAPI.Redis
 {
-    public class RedisCacheService : IRedisCacheService, ICacheService
+    public class RedisCacheService : IRedisCacheService
     {
         private readonly IDatabase _database;
 
