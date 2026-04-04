@@ -1,4 +1,4 @@
-﻿namespace Energy.WebAPI.DTOs.MeterDTOs
+namespace Energy.WebAPI.DTOs.RegionDTOs
 {
     public class CreateRegionDTO
     {

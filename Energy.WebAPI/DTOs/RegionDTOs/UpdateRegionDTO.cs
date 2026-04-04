@@ -1,6 +1,6 @@
-﻿namespace Energy.WebAPI.DTOs.MeterDTOs
+namespace Energy.WebAPI.DTOs.RegionDTOs
 {
-    public class ResultRegionDTO
+    public class UpdateRegionDTO
     {
         public int Id { get; set; }
         public string RegionName { get; set; }

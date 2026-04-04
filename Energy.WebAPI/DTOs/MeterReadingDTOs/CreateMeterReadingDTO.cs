@@ -1,8 +1,7 @@
-namespace Energy.WebAPI.DTOs.MeterDTOs
+namespace Energy.WebAPI.DTOs.MeterReadingDTOs
 {
-    public class UpdateMeterReadingDTO
+    public class CreateMeterReadingDTO
     {
-        public long Id { get; set; }
         public int MeterId { get; set; }
         public decimal Consumption { get; set; }
         public int Voltage { get; set; }
