@@ -1,4 +1,4 @@
-﻿namespace Energy.WebAPI.Services.Redis
+﻿namespace Energy.WebAPI.Redis
 {
     public interface IRedisCacheService
     {

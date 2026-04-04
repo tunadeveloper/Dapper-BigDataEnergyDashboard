@@ -19,7 +19,6 @@
     <Folder Include="DTOs\MeterReadingDTOs\" />
     <Folder Include="DTOs\RegionDTOs\" />
     <Folder Include="Validations\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
