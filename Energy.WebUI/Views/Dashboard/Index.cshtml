@@ -1,7 +1,9 @@
 ﻿@model List<ResultMeterReadingWithRegionDTO>
+@using System.Globalization
 @{
     ViewData["Title"] = "Panel";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var tr = CultureInfo.GetCultureInfo("tr-TR");
 }
 
 <main class="md:pl-64 pt-16 min-h-screen bg-surface">
@@ -13,7 +15,7 @@
                     <span class="text-xs font-headline uppercase tracking-[2px] text-secondary">Toplam tüketim</span>
                     <span class="material-symbols-outlined text-primary-container/40 text-lg">electric_meter</span>
                 </div>
-                <div class="text-4xl font-headline font-bold text-primary mb-1 drop-shadow-[0_0_15px_rgba(0,242,255,0.4)]">1,2M <span class="text-lg font-light text-primary-fixed-dim">kWh</span></div>
+                <div class="text-4xl font-headline font-bold text-primary mb-1 drop-shadow-[0_0_15px_rgba(0,242,255,0.4)]">@(ViewBag.TotalConsumption != null ? Convert.ToDecimal(ViewBag.TotalConsumption).ToString("N0", tr) : "—") <span class="text-lg font-light text-primary-fixed-dim">kWh</span></div>
                 <div class="flex items-center gap-2 text-xs text-primary-fixed-dim">
                     <span class="material-symbols-outlined text-sm">trending_up</span>
                     <span>Önceki aya göre +%4,2</span>
@@ -25,7 +27,7 @@
                     <span class="text-xs font-headline uppercase tracking-[2px] text-secondary">Aktif akıllı sayaç</span>
                     <span class="material-symbols-outlined text-primary-container/40 text-lg">router</span>
                 </div>
-                <div class="text-4xl font-headline font-bold text-primary mb-1 drop-shadow-[0_0_15px_rgba(0,242,255,0.4)]">84.203</div>
+                <div class="text-4xl font-headline font-bold text-primary mb-1 drop-shadow-[0_0_15px_rgba(0,242,255,0.4)]">@(ViewBag.ActiveMeterCount != null ? Convert.ToInt32(ViewBag.ActiveMeterCount).ToString("N0", tr) : "—")</div>
                 <div class="flex items-center gap-2 text-xs text-[#00D1FF]">
                     <span class="w-2 h-2 rounded-full bg-[#00D1FF] animate-pulse"></span>
                     <span>%99,8 sistem çalışma süresi</span>
@@ -37,7 +39,7 @@
                     <span class="text-xs font-headline uppercase tracking-[2px] text-secondary">Ortalama şebeke voltajı</span>
                     <span class="material-symbols-outlined text-primary-container/40 text-lg">bolt</span>
                 </div>
-                <div class="text-4xl font-headline font-bold text-primary mb-1 drop-shadow-[0_0_15px_rgba(0,242,255,0.4)]">232<span class="text-lg font-light text-primary-fixed-dim">V</span></div>
+                <div class="text-4xl font-headline font-bold text-primary mb-1 drop-shadow-[0_0_15px_rgba(0,242,255,0.4)]">@(ViewBag.AverageVoltage != null ? Convert.ToDecimal(ViewBag.AverageVoltage).ToString("N0", tr) : "—")<span class="text-lg font-light text-primary-fixed-dim">V</span></div>
                 <div class="flex items-center gap-2 text-xs text-on-surface-variant">
                     <span class="material-symbols-outlined text-sm">check_circle</span>
                     <span>Nominal aralık içinde (±%2)</span>

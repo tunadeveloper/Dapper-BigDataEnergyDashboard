@@ -16,7 +16,7 @@ namespace Energy.WebAPI.Repositories.Dashboard
 
         public async Task<EnergyDashboardDto> GetDashboardStatsAsync(DateTime start, DateTime end)
         {
-            const string sql = "SELECT (SELECT ISNULL(SUM(Consumption), 0) FROM MeterReadings WHERE ReadingDate >= @Start AND ReadingDate <= @End) AS TotalConsumption, (SELECT COUNT(*) FROM MeterReadings WHERE ReadingDate >= @Start AND ReadingDate <= @End) AS ReadingCount, (SELECT COUNT(*) FROM Meters WHERE IsActive = 1) AS ActiveMeterCount, (SELECT COUNT(*) FROM Regions) AS RegionCount";
+            const string sql = "SELECT (SELECT ISNULL(SUM(Consumption), 0) FROM MeterReadings WHERE ReadingDate >= @Start AND ReadingDate <= @End) AS TotalConsumption, (SELECT COUNT(*) FROM MeterReadings WHERE ReadingDate >= @Start AND ReadingDate <= @End) AS ReadingCount, (SELECT COUNT(*) FROM Meters WHERE IsActive = 1) AS ActiveMeterCount, (SELECT ISNULL(AVG(CAST(Voltage AS DECIMAL(18,2))), 0) FROM MeterReadings WHERE ReadingDate >= @Start AND ReadingDate <= @End) AS AverageVoltage, (SELECT COUNT(*) FROM Regions) AS RegionCount";
             await using var connection = (SqlConnection)_context.CreateConnection();
             await connection.OpenAsync();
             return await connection.QueryFirstAsync<EnergyDashboardDto>(sql, new { Start = start, End = end });
