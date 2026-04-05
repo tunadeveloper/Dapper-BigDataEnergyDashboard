@@ -9,6 +9,7 @@ namespace Energy.WebAPI.Repositories.MeterReadings
     public class MeterReadingService : IMeterReadingService
     {
         private const string MeterReadingListKey = "meterreadings:list";
+        private const string MeterReadingListWithRegionKey = "meterreadings:list:region";
         private static string MeterReadingByIdKey(long id) => $"meterreadings:{id}";
         private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(15);
 
@@ -28,6 +29,7 @@ namespace Energy.WebAPI.Repositories.MeterReadings
             await connection.OpenAsync();
             await connection.ExecuteAsync(sql, createMeterReadingDTO);
             _cache.RemoveData(MeterReadingListKey);
+            _cache.RemoveData(MeterReadingListWithRegionKey);
         }
 
         public async Task DeleteAsync(long id)
@@ -37,6 +39,7 @@ namespace Energy.WebAPI.Repositories.MeterReadings
             await connection.OpenAsync();
             await connection.ExecuteAsync(sql, new { Id = id });
             _cache.RemoveData(MeterReadingListKey);
+            _cache.RemoveData(MeterReadingListWithRegionKey);
             _cache.RemoveData(MeterReadingByIdKey(id));
         }
 
@@ -69,6 +72,20 @@ namespace Energy.WebAPI.Repositories.MeterReadings
             return list;
         }
 
+        public async Task<List<ResultMeterReadingWithRegionDTO>> GetListWithRegionAsync()
+        {
+            var cached = _cache.GetData<List<ResultMeterReadingWithRegionDTO>>(MeterReadingListWithRegionKey);
+            if (cached != null)
+                return cached;
+
+            const string sql = "SELECT mr.Id, mr.MeterId, mr.Consumption, mr.Voltage, mr.ReadingDate, mr.TariffType, reg.RegionName FROM MeterReadings mr INNER JOIN Meters m ON mr.MeterId = m.Id INNER JOIN Regions reg ON m.RegionId = reg.Id ORDER BY mr.ReadingDate DESC";
+            await using var connection = (SqlConnection)_context.CreateConnection();
+            await connection.OpenAsync();
+            var list = (await connection.QueryAsync<ResultMeterReadingWithRegionDTO>(sql)).ToList();
+            _cache.SetData(MeterReadingListWithRegionKey, list, CacheTtl);
+            return list;
+        }
+
         public async Task UpdateAsync(UpdateMeterReadingDTO updateMeterReadingDTO)
         {
             const string sql = "UPDATE MeterReadings SET MeterId = @MeterId, Consumption = @Consumption, Voltage = @Voltage, ReadingDate = @ReadingDate, TariffType = @TariffType WHERE Id = @Id";
@@ -76,6 +93,7 @@ namespace Energy.WebAPI.Repositories.MeterReadings
             await connection.OpenAsync();
             await connection.ExecuteAsync(sql, updateMeterReadingDTO);
             _cache.RemoveData(MeterReadingListKey);
+            _cache.RemoveData(MeterReadingListWithRegionKey);
             _cache.RemoveData(MeterReadingByIdKey(updateMeterReadingDTO.Id));
         }
     }
