@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Sayaçlar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<main class="md:pl-64 pt-16 min-h-screen bg-surface">
+    <div class="p-8 space-y-8 max-w-6xl">
+        <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-outline-variant/10 pb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-xl bg-primary-container/10 flex items-center justify-center border border-primary-container/20">
+                    <span class="material-symbols-outlined text-primary-container text-3xl">electric_meter</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-headline font-bold text-primary tracking-tight">Sayaçlar</h1>
+                    <p class="text-sm text-secondary/70 mt-1">Kayıtlı sayaçların listesi ve detayları burada olacak.</p>
+                </div>
+            </div>
+            <button type="button" disabled class="px-5 py-2.5 rounded-lg text-xs font-headline uppercase tracking-wider bg-gradient-to-r from-primary to-primary-container text-on-primary opacity-50 cursor-not-allowed">Yeni sayaç</button>
+        </header>
+        <div class="bg-surface-container-low rounded-xl border border-outline-variant/10 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-surface-container-lowest/50 text-[10px] uppercase tracking-widest text-secondary font-headline">
+                        <tr>
+                            <th class="px-6 py-4">Seri no</th>
+                            <th class="px-6 py-4">Bölge</th>
+                            <th class="px-6 py-4">Durum</th>
+                            <th class="px-6 py-4 text-right">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant/10 text-on-surface-variant">
+                        <tr>
+                            <td colspan="4" class="px-6 py-16 text-center">
+                                <span class="material-symbols-outlined text-4xl text-primary-container/25 mb-2 block">electric_meter</span>
+                                <p class="text-sm">Liste boş — API bağlantısı sonrası doldurulacak</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
