@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewData["Title"] = "Panel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="md:pl-64 pt-16 min-h-screen bg-surface">
+    <div class="p-8 space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all group overflow-hidden relative">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary-container/5 rounded-full blur-3xl group-hover:bg-primary-container/10 transition-all"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-headline uppercase tracking-[2px] text-secondary">Toplam tüketim</span>
+                    <span class="material-symbols-outlined text-primary-container/40 text-lg">electric_meter</span>
+                </div>
+                <div class="text-4xl font-headline font-bold text-primary mb-1 drop-shadow-[0_0_15px_rgba(0,242,255,0.4)]">1,2M <span class="text-lg font-light text-primary-fixed-dim">kWh</span></div>
+                <div class="flex items-center gap-2 text-xs text-primary-fixed-dim">
+                    <span class="material-symbols-outlined text-sm">trending_up</span>
+                    <span>Önceki aya göre +%4,2</span>
+                </div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all group overflow-hidden relative">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary-container/5 rounded-full blur-3xl group-hover:bg-primary-container/10 transition-all"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-headline uppercase tracking-[2px] text-secondary">Aktif akıllı sayaç</span>
+                    <span class="material-symbols-outlined text-primary-container/40 text-lg">router</span>
+                </div>
+                <div class="text-4xl font-headline font-bold text-primary mb-1 drop-shadow-[0_0_15px_rgba(0,242,255,0.4)]">84.203</div>
+                <div class="flex items-center gap-2 text-xs text-[#00D1FF]">
+                    <span class="w-2 h-2 rounded-full bg-[#00D1FF] animate-pulse"></span>
+                    <span>%99,8 sistem çalışma süresi</span>
+                </div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all group overflow-hidden relative">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary-container/5 rounded-full blur-3xl group-hover:bg-primary-container/10 transition-all"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-headline uppercase tracking-[2px] text-secondary">Ortalama şebeke voltajı</span>
+                    <span class="material-symbols-outlined text-primary-container/40 text-lg">bolt</span>
+                </div>
+                <div class="text-4xl font-headline font-bold text-primary mb-1 drop-shadow-[0_0_15px_rgba(0,242,255,0.4)]">232<span class="text-lg font-light text-primary-fixed-dim">V</span></div>
+                <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                    <span>Nominal aralık içinde (±%2)</span>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-10 gap-6">
+            <div class="lg:col-span-6 bg-surface-container-low p-8 rounded-xl relative overflow-hidden">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h3 class="text-lg font-headline font-bold text-primary tracking-tight">Saatlik enerji yük eğilimi</h3>
+                        <p class="text-xs text-secondary/60">Sistem geneli tüketim, gerçek zamanlı (son 24 saat)</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="px-3 py-1 bg-surface-container-high rounded text-[10px] text-primary-container font-bold uppercase tracking-wider">Canlı</span>
+                    </div>
+                </div>
+                <div class="w-full h-64 relative mt-4">
+                    <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 200">
+                        <defs>
+                            <lineargradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                                <stop offset="0%" stop-color="#00F2FF" stop-opacity="0.3"></stop>
+                                <stop offset="100%" stop-color="#00F2FF" stop-opacity="0"></stop>
+                            </lineargradient>
+                        </defs>
+                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.5" x1="0" x2="1000" y1="50" y2="50"></line>
+                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.5" x1="0" x2="1000" y1="100" y2="100"></line>
+                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.5" x1="0" x2="1000" y1="150" y2="150"></line>
+                        <path d="M0,160 L50,140 L100,155 L150,130 L200,145 L250,90 L300,110 L350,60 L400,85 L450,40 L500,55 L550,70 L600,30 L650,45 L700,80 L750,95 L800,120 L850,110 L900,140 L950,130 L1000,150 L1000,200 L0,200 Z" fill="url(#chartGradient)"></path>
+                        <path class="drop-shadow-[0_0_8px_rgba(0,242,255,0.8)]" d="M0,160 L50,140 L100,155 L150,130 L200,145 L250,90 L300,110 L350,60 L400,85 L450,40 L500,55 L550,70 L600,30 L650,45 L700,80 L750,95 L800,120 L850,110 L900,140 L950,130 L1000,150" fill="none" stroke="#00F2FF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+                    </svg>
+                    <div class="flex justify-between mt-4 text-[10px] font-headline text-secondary uppercase tracking-widest px-2">
+                        <span>00:00</span><span>04:00</span><span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span><span>23:59</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-4 bg-surface-container-low p-8 rounded-xl flex flex-col items-center">
+                <div class="w-full text-left mb-6">
+                    <h3 class="text-lg font-headline font-bold text-primary tracking-tight">Bölgesel dağılım</h3>
+                    <p class="text-xs text-secondary/60">Coğrafi sektöre göre yük payı</p>
+                </div>
+                <div class="relative w-48 h-48 flex items-center justify-center my-4">
+                    <svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
+                        <circle cx="18" cy="18" fill="none" r="16" stroke="#1C2A41" stroke-width="4"></circle>
+                        <circle cx="18" cy="18" fill="none" r="16" stroke="#00F2FF" stroke-dasharray="40, 60" stroke-width="4"></circle>
+                        <circle cx="18" cy="18" fill="none" r="16" stroke="#BCC6E6" stroke-dasharray="25, 75" stroke-dashoffset="-40" stroke-width="4"></circle>
+                        <circle cx="18" cy="18" fill="none" r="16" stroke="#3A494B" stroke-dasharray="20, 80" stroke-dashoffset="-65" stroke-width="4"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-2xl font-headline font-bold text-primary">%40</span>
+                        <span class="text-[10px] text-secondary uppercase tracking-widest">Kuzey bölgesi</span>
+                    </div>
+                </div>
+                <div class="w-full mt-6 grid grid-cols-2 gap-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-[#00F2FF]"></div>
+                        <span class="text-xs text-on-surface/80">Kuzey: %40</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-[#BCC6E6]"></div>
+                        <span class="text-xs text-on-surface/80">Güney: %25</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-[#3A494B]"></div>
+                        <span class="text-xs text-on-surface/80">Doğu: %20</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-surface-container-highest"></div>
+                        <span class="text-xs text-on-surface/80">Batı: %15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10">
+            <div class="p-6 border-b border-outline-variant/10 flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-headline font-bold text-primary uppercase tracking-[1px]">Anomali aktivite günlükleri</h3>
+                    <p class="text-xs text-secondary/60">Şebeke dalgalanmaları ve uç tüketimlerin gerçek zamanlı tespiti</p>
+                </div>
+                <button class="text-xs font-headline text-primary-container border border-primary-container/20 px-4 py-2 rounded hover:bg-primary-container/10 transition-all">Tüm günlükleri gör</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-surface-container-lowest/50 text-[10px] uppercase tracking-[2px] text-secondary font-headline">
+                        <tr>
+                            <th class="px-6 py-4">Sayaç ID</th>
+                            <th class="px-6 py-4">Durum</th>
+                            <th class="px-6 py-4 text-right">Voltaj (V)</th>
+                            <th class="px-6 py-4 text-right">Tüketim (kWh)</th>
+                            <th class="px-6 py-4">Konum</th>
+                            <th class="px-6 py-4 text-right">Zaman damgası</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-body divide-y divide-outline-variant/10">
+                        <tr class="hover:bg-surface-container-highest/40 transition-colors cursor-pointer group">
+                            <td class="px-6 py-4 font-headline text-primary tracking-wider">#VM-29182</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-error/10 text-error border border-error/20">Kritik uyarı</span>
+                            </td>
+                            <td class="px-6 py-4 text-right font-medium text-error drop-shadow-[0_0_5px_rgba(255,180,171,0.3)]">248,5V</td>
+                            <td class="px-6 py-4 text-right">14,2</td>
+                            <td class="px-6 py-4 text-secondary">Sanayi parkı B</td>
+                            <td class="px-6 py-4 text-right text-on-surface-variant font-mono text-xs">2023-10-27 14:23:01</td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-highest/40 transition-colors cursor-pointer group">
+                            <td class="px-6 py-4 font-headline text-primary tracking-wider">#VM-88210</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-primary-container/10 text-primary-container border border-primary-container/20">Yük sıçraması</span>
+                            </td>
+                            <td class="px-6 py-4 text-right font-medium">231,2V</td>
+                            <td class="px-6 py-4 text-right font-headline text-primary-container">184,5</td>
+                            <td class="px-6 py-4 text-secondary">Teknoloji koridoru kuzey</td>
+                            <td class="px-6 py-4 text-right text-on-surface-variant font-mono text-xs">2023-10-27 14:18:45</td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-highest/40 transition-colors cursor-pointer group">
+                            <td class="px-6 py-4 font-headline text-primary tracking-wider">#VM-10293</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-surface-variant text-secondary">Uyarı</span>
+                            </td>
+                            <td class="px-6 py-4 text-right font-medium text-error drop-shadow-[0_0_5px_rgba(255,180,171,0.2)]">241,1V</td>
+                            <td class="px-6 py-4 text-right">0,8</td>
+                            <td class="px-6 py-4 text-secondary">Konut bölgesi 04</td>
+                            <td class="px-6 py-4 text-right text-on-surface-variant font-mono text-xs">2023-10-27 14:15:32</td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-highest/40 transition-colors cursor-pointer group">
+                            <td class="px-6 py-4 font-headline text-primary tracking-wider">#VM-44719</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-error/10 text-error border border-error/20">Kritik uyarı</span>
+                            </td>
+                            <td class="px-6 py-4 text-right font-medium">208,9V</td>
+                            <td class="px-6 py-4 text-right">4,2</td>
+                            <td class="px-6 py-4 text-secondary">Merkez şebeke</td>
+                            <td class="px-6 py-4 text-right text-on-surface-variant font-mono text-xs">2023-10-27 14:12:10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>
