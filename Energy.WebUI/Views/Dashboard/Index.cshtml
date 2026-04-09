@@ -50,31 +50,79 @@
             <div class="lg:col-span-6 bg-surface-container-low p-8 rounded-xl relative overflow-hidden">
                 <div class="flex items-center justify-between mb-8">
                     <div>
-                        <h3 class="text-lg font-headline font-bold text-primary tracking-tight">Saatlik enerji yük eğilimi</h3>
-                        <p class="text-xs text-secondary/60">Sistem geneli tüketim, gerçek zamanlı (son 24 saat)</p>
+                        <h3 class="text-lg font-headline font-bold text-primary tracking-tight">Aylık enerji yük eğilimi</h3>
+                        <p class="text-xs text-secondary/60">Sistem geneli tüketim, gerçek zamanlı (son 12 ay)</p>
                     </div>
                     <div class="flex gap-2">
                         <span class="px-3 py-1 bg-surface-container-high rounded text-[10px] text-primary-container font-bold uppercase tracking-wider">Canlı</span>
                     </div>
                 </div>
-                <div class="w-full h-64 relative mt-4">
-                    <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 200">
+                <script type="application/json" id="monthly-load-json">@(Html.Raw(ViewBag.MonthlyLoadJson as string ?? "[]"))</script>
+                <div class="w-full h-64 mt-4 relative">
+                    <svg id="monthly-load-chart" class="w-full h-full" viewBox="0 0 1000 260" preserveAspectRatio="none">
                         <defs>
-                            <lineargradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
-                                <stop offset="0%" stop-color="#00F2FF" stop-opacity="0.3"></stop>
-                                <stop offset="100%" stop-color="#00F2FF" stop-opacity="0"></stop>
-                            </lineargradient>
+                            <linearGradient id="monthlyLoadArea" x1="0%" x2="0%" y1="0%" y2="100%">
+                                <stop offset="0%" stop-color="#00F2FF" stop-opacity="0.45"></stop>
+                                <stop offset="100%" stop-color="#00F2FF" stop-opacity="0.02"></stop>
+                            </linearGradient>
                         </defs>
-                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.5" x1="0" x2="1000" y1="50" y2="50"></line>
-                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.5" x1="0" x2="1000" y1="100" y2="100"></line>
-                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.5" x1="0" x2="1000" y1="150" y2="150"></line>
-                        <path d="M0,160 L50,140 L100,155 L150,130 L200,145 L250,90 L300,110 L350,60 L400,85 L450,40 L500,55 L550,70 L600,30 L650,45 L700,80 L750,95 L800,120 L850,110 L900,140 L950,130 L1000,150 L1000,200 L0,200 Z" fill="url(#chartGradient)"></path>
-                        <path class="drop-shadow-[0_0_8px_rgba(0,242,255,0.8)]" d="M0,160 L50,140 L100,155 L150,130 L200,145 L250,90 L300,110 L350,60 L400,85 L450,40 L500,55 L550,70 L600,30 L650,45 L700,80 L750,95 L800,120 L850,110 L900,140 L950,130 L1000,150" fill="none" stroke="#00F2FF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.6" x1="0" x2="1000" y1="50" y2="50"></line>
+                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.6" x1="0" x2="1000" y1="100" y2="100"></line>
+                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.6" x1="0" x2="1000" y1="150" y2="150"></line>
+                        <line stroke="#3A494B" stroke-dasharray="4" stroke-width="0.6" x1="0" x2="1000" y1="200" y2="200"></line>
+                        <path id="monthly-load-area-path" fill="url(#monthlyLoadArea)" d=""></path>
+                        <path id="monthly-load-line-path" fill="none" stroke="#00F2FF" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" d=""></path>
                     </svg>
-                    <div class="flex justify-between mt-4 text-[10px] font-headline text-secondary uppercase tracking-widest px-2">
-                        <span>00:00</span><span>04:00</span><span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span><span>23:59</span>
-                    </div>
                 </div>
+                <div id="monthly-chart-labels" class="flex justify-between mt-4 text-[10px] font-headline text-secondary uppercase tracking-widest px-1"></div>
+                <script>
+                    (function () {
+                        var raw = document.getElementById("monthly-load-json");
+                        var parsed = JSON.parse(raw && raw.textContent ? raw.textContent : "[]");
+                        var points = Array.isArray(parsed) ? parsed : [];
+                        var areaPath = document.getElementById("monthly-load-area-path");
+                        var linePath = document.getElementById("monthly-load-line-path");
+                        var labels = document.getElementById("monthly-chart-labels");
+                        if (!areaPath || !linePath || !labels) return;
+                        function val(p) { var x = p.consumption != null ? p.consumption : p.Consumption; return Number(x) || 0; }
+                        function readingIso(p) { return p.readingDate != null ? p.readingDate : p.ReadingDate; }
+                        function monthKey(d) {
+                            return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0");
+                        }
+                        var monthTotals = {};
+                        points.forEach(function (p) {
+                            var d = new Date(readingIso(p));
+                            if (!isNaN(d.getTime())) {
+                                var k = monthKey(d);
+                                monthTotals[k] = (monthTotals[k] || 0) + val(p);
+                            }
+                        });
+                        var now = new Date();
+                        var monthly = Array.from({ length: 12 }, function (_, i) {
+                            var d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - (11 - i), 1));
+                            return { date: d, total: monthTotals[monthKey(d)] || 0 };
+                        });
+                        var values = monthly.map(function (x) { return x.total; });
+                        var max = Math.max.apply(null, values.concat([1]));
+                        var min = Math.min.apply(null, values.concat([0]));
+                        var span = Math.max(max - min, 1);
+                        var W = 1000, H = 260, topPad = 12, bottomPad = 20;
+                        var pts = monthly.map(function (p, i) {
+                            var x = monthly.length === 1 ? W / 2 : (i / (monthly.length - 1)) * W;
+                            var y = topPad + (1 - ((p.total - min) / span)) * (H - topPad - bottomPad);
+                            return { x: x, y: y };
+                        });
+                        var lineD = pts.length ? ("M" + pts[0].x + "," + pts[0].y) : "";
+                        for (var i = 1; i < pts.length; i++) lineD += " L" + pts[i].x + "," + pts[i].y;
+                        var areaD = lineD ? (lineD + " L" + W + "," + H + " L0," + H + " Z") : "";
+                        linePath.setAttribute("d", lineD);
+                        areaPath.setAttribute("d", areaD);
+                        labels.innerHTML = monthly.map(function (m) {
+                            var t = m.date.toLocaleDateString("tr-TR", { month: "short", timeZone: "Europe/Istanbul" });
+                            return "<span>" + t + "</span>";
+                        }).join("");
+                    })();
+                </script>
             </div>
             <div class="lg:col-span-4 bg-surface-container-low p-8 rounded-xl flex flex-col items-center">
                 <div class="w-full text-left mb-6">

@@ -33,6 +33,7 @@ namespace Energy.WebUI.Controllers
             if (responseMessage.IsSuccessStatusCode)
             {
                 var json = await responseMessage.Content.ReadAsStringAsync();
+                ViewBag.MonthlyLoadJson = json;
                 var values = JsonConvert.DeserializeObject<List<ResultMeterReadingWithRegionDTO>>(json) ?? new List<ResultMeterReadingWithRegionDTO>();
                 return View(values.Take(5).ToList());
             }
