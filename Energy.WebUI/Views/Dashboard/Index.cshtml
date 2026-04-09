@@ -129,36 +129,73 @@
                     <h3 class="text-lg font-headline font-bold text-primary tracking-tight">Bölgesel dağılım</h3>
                     <p class="text-xs text-secondary/60">Coğrafi sektöre göre yük payı</p>
                 </div>
+                <script type="application/json" id="region-list-json">@(Html.Raw(ViewBag.RegionJson as string ?? "[]"))</script>
                 <div class="relative w-48 h-48 flex items-center justify-center my-4">
-                    <svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36" id="region-chart-svg">
                         <circle cx="18" cy="18" fill="none" r="16" stroke="#1C2A41" stroke-width="4"></circle>
-                        <circle cx="18" cy="18" fill="none" r="16" stroke="#00F2FF" stroke-dasharray="40, 60" stroke-width="4"></circle>
-                        <circle cx="18" cy="18" fill="none" r="16" stroke="#BCC6E6" stroke-dasharray="25, 75" stroke-dashoffset="-40" stroke-width="4"></circle>
-                        <circle cx="18" cy="18" fill="none" r="16" stroke="#3A494B" stroke-dasharray="20, 80" stroke-dashoffset="-65" stroke-width="4"></circle>
                     </svg>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <span class="text-2xl font-headline font-bold text-primary">%40</span>
-                        <span class="text-[10px] text-secondary uppercase tracking-widest">Kuzey bölgesi</span>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center" id="region-chart-center">
+                        <span class="text-2xl font-headline font-bold text-primary">—</span>
+                        <span class="text-[10px] text-secondary uppercase tracking-widest">Bölge</span>
                     </div>
                 </div>
-                <div class="w-full mt-6 grid grid-cols-2 gap-4">
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-[#00F2FF]"></div>
-                        <span class="text-xs text-on-surface/80">Kuzey: %40</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-[#BCC6E6]"></div>
-                        <span class="text-xs text-on-surface/80">Güney: %25</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-[#3A494B]"></div>
-                        <span class="text-xs text-on-surface/80">Doğu: %20</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-surface-container-highest"></div>
-                        <span class="text-xs text-on-surface/80">Batı: %15</span>
-                    </div>
-                </div>
+                <div class="w-full mt-6 grid grid-cols-2 gap-4" id="region-legend"></div>
+                <script>
+                    (function () {
+                        var regionRaw = document.getElementById("region-list-json");
+                        var loadRaw = document.getElementById("monthly-load-json");
+                        var chartSvg = document.getElementById("region-chart-svg");
+                        var legend = document.getElementById("region-legend");
+                        var center = document.getElementById("region-chart-center");
+                        if (!regionRaw || !loadRaw || !chartSvg || !legend || !center) return;
+                        var regionsParsed = JSON.parse(regionRaw.textContent || "[]");
+                        var readsParsed = JSON.parse(loadRaw.textContent || "[]");
+                        var regions = Array.isArray(regionsParsed) ? regionsParsed : [];
+                        var reads = Array.isArray(readsParsed) ? readsParsed : [];
+                        var colors = ["#00F2FF", "#BCC6E6", "#3A494B", "#7EE787", "#F59E0B", "#A78BFA", "#F472B6", "#93C5FD"];
+                        var totals = {};
+                        reads.forEach(function (r) {
+                            var name = r.regionName != null ? r.regionName : r.RegionName;
+                            var c = r.consumption != null ? r.consumption : r.Consumption;
+                            var v = Number(c) || 0;
+                            if (name) totals[name] = (totals[name] || 0) + v;
+                        });
+                        var data = regions.map(function (r) {
+                            var name = r.regionName != null ? r.regionName : r.RegionName;
+                            return { name: name, value: totals[name] || 0 };
+                        }).filter(function (x) { return x.name; });
+                        var total = data.reduce(function (s, x) { return s + x.value; }, 0);
+                        if (total <= 0 && data.length > 0) {
+                            data = data.map(function (x) { return { name: x.name, value: 1 }; });
+                            total = data.length;
+                        }
+                        var offset = 0;
+                        data.forEach(function (item, i) {
+                            var percent = item.value / total;
+                            var dash = (percent * 100).toFixed(4) + ", 100";
+                            var node = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                            node.setAttribute("cx", "18");
+                            node.setAttribute("cy", "18");
+                            node.setAttribute("r", "16");
+                            node.setAttribute("fill", "none");
+                            node.setAttribute("stroke-width", "4");
+                            node.setAttribute("stroke", colors[i % colors.length]);
+                            node.setAttribute("stroke-dasharray", dash);
+                            node.setAttribute("stroke-dashoffset", String(-offset));
+                            chartSvg.appendChild(node);
+                            offset += percent * 100;
+                        });
+                        var top = data.slice().sort(function (a, b) { return b.value - a.value; })[0];
+                        if (top) {
+                            var topPercent = Math.round((top.value / total) * 100);
+                            center.innerHTML = "<span class=\"text-2xl font-headline font-bold text-primary\">%" + topPercent + "</span><span class=\"text-[10px] text-secondary uppercase tracking-widest\">" + top.name + "</span>";
+                        }
+                        legend.innerHTML = data.map(function (item, i) {
+                            var p = Math.round((item.value / total) * 100);
+                            return "<div class=\"flex items-center gap-2\"><div class=\"w-2 h-2 rounded-full\" style=\"background:" + colors[i % colors.length] + "\"></div><span class=\"text-xs text-on-surface/80\">" + item.name + ": %" + p + "</span></div>";
+                        }).join("");
+                    })();
+                </script>
             </div>
         </div>
         <section class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10">

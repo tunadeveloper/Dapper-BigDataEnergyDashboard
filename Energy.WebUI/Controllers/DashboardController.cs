@@ -1,5 +1,6 @@
 ﻿using Energy.WebUI.DTOs.DashboardDTOs;
 using Energy.WebUI.DTOs.MeterReadingDTOs;
+using Energy.WebUI.DTOs.RegionDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -35,6 +36,13 @@ namespace Energy.WebUI.Controllers
                 var json = await responseMessage.Content.ReadAsStringAsync();
                 ViewBag.MonthlyLoadJson = json;
                 var values = JsonConvert.DeserializeObject<List<ResultMeterReadingWithRegionDTO>>(json) ?? new List<ResultMeterReadingWithRegionDTO>();
+                var regionsResponse = await client.GetAsync("api/Regions");
+                if (regionsResponse.IsSuccessStatusCode)
+                {
+                    var regionsJson = await regionsResponse.Content.ReadAsStringAsync();
+                    var regions = JsonConvert.DeserializeObject<List<ResultRegionDTO>>(regionsJson) ?? new List<ResultRegionDTO>();
+                    ViewBag.RegionJson = JsonConvert.SerializeObject(regions);
+                }
                 return View(values.Take(5).ToList());
             }
             return View();
