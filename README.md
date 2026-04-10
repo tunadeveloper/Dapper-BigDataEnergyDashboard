@@ -1,4 +1,4 @@
-# ⚡ Dapper BigData Energy Dashboard
+# ⚡ Dapper and Redis: Big Data Energy Dashboard
 
 ![C#](https://img.shields.io/badge/C%23-%23239120.svg?style=flat-square&logo=csharp&logoColor=white)
 ![.NET 10](https://img.shields.io/badge/.NET%2010-512BD4?style=flat-square&logo=dotnet&logoColor=white)
