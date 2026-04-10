@@ -42,32 +42,58 @@ Projede veritabanı erişimi, performans optimizasyonu ve gerçek zamanlı ileti
 
 #### 📊 Dapper ile Temel SQL Komutları ve Sorgular
 ```text
-1. SELECT     : Veri listeleme/getirme          | 2. INSERT   : Yeni kayıt ekleme
-3. UPDATE     : Mevcut kaydı güncelleme         | 4. DELETE   : Kayıt silme
-5. WHERE      : Filtreleme                      | 6. ORDER BY : Sıralama
-7. GROUP BY   : Toplu analiz/özetleme           | 8. JOIN     : İlişkili tabloları birleştirme
+1.  SELECT       : Veri listeleme/getirme                | 2.  INSERT        : Yeni kayıt ekleme
+3.  UPDATE       : Mevcut kaydı güncelleme               | 4.  DELETE        : Kayıt silme
+5.  WHERE        : Filtreleme                            | 6.  ORDER BY      : Sıralama
+7.  GROUP BY     : Toplu analiz/özetleme                 | 8.  JOIN          : İlişkili tabloları birleştirme
+9.  COUNT        : Kayıt sayısı alma                     | 10. AS           : Kolon/Tabloya takma ad verme
+11. FROM         : Veri kaynağını belirtme               | 12. AND          : Birden fazla koşul sağlama
+13. OR           : Alternatif koşul ekleme               | 14. IN           : Çoklu filtreleme
+15. BETWEEN      : Aralık bazlı filtreleme               | 16. LIKE         : Metin eşleşmesi
+17. DISTINCT     : Tekrar eden kayıtları eleme           | 18. TOP          : İlk N kaydı getirme
+19. MIN/MAX      : En küçük/en büyük değer               | 20. SUM/AVG      : Toplam & Ortalama hesaplama
+21. LEFT JOIN    : Sol öncelikli birleştirme             | 22. RIGHT JOIN   : Sağ öncelikli birleştirme
+23. INNER JOIN   : Kesişen kayıtları birleştirme
 
--- Örnek Repositoy Sorguları --
-9.  SELECT Id, Name FROM Meters
-10. SELECT Id, MeterId, Value FROM MeterReadings WHERE MeterId = @MeterId
-11. UPDATE Meters SET Name = @Name, RegionId = @RegionId WHERE Id = @Id
-12. INSERT INTO Regions (Name, Code) VALUES (@Name, @Code)
-13. DELETE FROM MeterReadings WHERE Id = @Id
+-- Örnek Repository Sorguları --
+24. SELECT Id, Name FROM Meters
+25. SELECT Id, MeterId, Value FROM MeterReadings WHERE MeterId = @MeterId
+26. UPDATE Meters SET Name = @Name, RegionId = @RegionId WHERE Id = @Id
+27. INSERT INTO Regions (Name, Code) VALUES (@Name, @Code)
+28. DELETE FROM MeterReadings WHERE Id = @Id
 ```
 #### ⚡ Realtime (SignalR) ve Cache (Redis) Altyapısı
 ```text
-14. Endpoint                : /hubs/energy (Ana iletişim kanalı)
-15. ReceiveAnomaly          : Sistemdeki normal dışı değerleri anlık bildiren kanal
-16. ReceiveRedisPullStatus  : Navbar'a yansıyan anlık Redis okuma/yükleme süresi kanalı
-17. Cache Keys (Meters)     : meters:* (Sayaç verileri önbelleği)
-18. Cache Keys (Readings)   : meterreadings:* (Okuma verileri önbelleği)
-19. Cache Keys (Regions)    : regions:* (Bölge verileri önbelleği)
-20. Cache Keys (Dashboard)  : dashboard_* (Ana panel istatistikleri önbelleği)
+29. Endpoint                : /hubs/energy (Ana iletişim kanalı)
+30. ReceiveAnomaly          : Anlık anomali bildirim kanalı
+31. ReceiveRedisPullStatus  : Navbar üzerinde Redis getirme/yükleme süreleri
+32. Cache Keys (Meters)     : meters:* (Sayaç verileri cache)
+33. Cache Keys (Readings)   : meterreadings:* (Okuma verileri cache)
+34. Cache Keys (Regions)    : regions:* (Bölge verileri cache)
+35. Cache Keys (Dashboard)  : dashboard_* (Dashboard istatistik cache)
 ```
 🔍 Proje Katmanları ve Mimari Yaklaşımlar
 ```text
-21. Energy.WebAPI           : İş kuralları, veri erişimi (Dapper), Redis Cache ve SignalR yayın katmanı
-22. Energy.WebUI            : Controller, Razor View, MVC ve SignalR JS Client tüketim katmanı
-23. ServiceExtensions       : Program.cs kirliliğini önlemek için kullanılan bağımlılık enjeksiyon sınıfı
-24. Pattern                 : Repository & Service Pattern, Cache-aside, JSON tabanlı DTO aktarımı
+36. Energy.WebAPI           : İş kuralları, Dapper, Redis ve SignalR yayın katmanı
+37. Energy.WebUI            : Controller + Razor Views + SignalR JS Client tüketimi
+38. ServiceExtensions       : Program.cs temiz DI yönetimi
+39. Pattern                 : Repository, Service Pattern, Cache-aside, JSON DTO aktarımı
 ```
+# 📊 Dashboard
+
+<img width="2525" height="1209" alt="Image" src="https://github.com/user-attachments/assets/98f9f72c-80fc-48ac-bfaa-b282fb13b6e9" />
+<img width="1909" height="901" alt="Image" src="https://github.com/user-attachments/assets/828ccba8-c8d2-4dd3-bdeb-06c191058c9b" />
+<img width="1902" height="919" alt="Image" src="https://github.com/user-attachments/assets/6b9fcb6b-d983-40a8-a986-d03af219bc1e" />
+<img width="1909" height="925" alt="Image" src="https://github.com/user-attachments/assets/c820c95c-210f-4852-a97e-c6c2a9cc9e51" />
+
+# 📘 Scalar
+
+<img width="2496" height="1284" alt="Image" src="https://github.com/user-attachments/assets/c5bfcd3a-6038-4878-8f58-a8254f7cbe38" />
+
+# 🐳 Docker
+
+<img width="1918" height="604" alt="Image" src="https://github.com/user-attachments/assets/b7bb4742-f356-461f-bdb9-f57beb4c4f06" />
+
+# 📦 SQL Veri Sayısı
+
+<img width="946" height="322" alt="Image" src="https://github.com/user-attachments/assets/48d0c2eb-c350-4ead-b5ac-fe6af2ea1795" />
