@@ -1,0 +1,92 @@
+@{
+    ViewData["Title"] = "Sayaç Okumaları";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="md:pl-64 pt-16 min-h-screen bg-surface">
+    <div class="p-8 space-y-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-headline font-bold text-primary tracking-tight">Sayaç Okumaları</h1>
+                <p class="text-sm text-secondary">Güncel tüketim, voltaj ve zaman damgası görünümü</p>
+            </div>
+            <button class="px-4 py-2 rounded-lg bg-primary-container/20 text-primary text-xs font-headline uppercase tracking-wider border border-primary-container/30">Dışa Aktar</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Bugünkü okuma</div>
+                <div class="text-3xl font-headline font-bold text-primary">48.230</div>
+                <div class="text-xs text-primary-fixed-dim mt-2">Her 15 dk otomatik toplama</div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Toplam tüketim</div>
+                <div class="text-3xl font-headline font-bold text-primary">1.284 MWh</div>
+                <div class="text-xs text-[#00D1FF] mt-2">Düne göre +%2,6</div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Ortalama voltaj</div>
+                <div class="text-3xl font-headline font-bold text-primary">228 V</div>
+                <div class="text-xs text-on-surface-variant mt-2">Nominal aralıkta</div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Anomali sayısı</div>
+                <div class="text-3xl font-headline font-bold text-primary">37</div>
+                <div class="text-xs text-on-surface-variant mt-2">İnceleme bekleyen 9 kayıt</div>
+            </div>
+        </div>
+
+        <section class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10">
+            <div class="p-6 border-b border-outline-variant/10 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-headline font-bold text-primary">Son Okuma Kayıtları</h2>
+                    <p class="text-xs text-secondary/60">Statik tablo önizlemesi</p>
+                </div>
+                <span class="text-[10px] px-3 py-1 rounded bg-surface-container-high text-secondary uppercase tracking-wider">Canlı değil</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-surface-container-lowest/50 text-[10px] uppercase tracking-[2px] text-secondary font-headline">
+                        <tr>
+                            <th class="px-6 py-4">Sayaç ID</th>
+                            <th class="px-6 py-4">Bölge</th>
+                            <th class="px-6 py-4 text-right">Tüketim (kWh)</th>
+                            <th class="px-6 py-4 text-right">Voltaj (V)</th>
+                            <th class="px-6 py-4 text-right">Zaman</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-body divide-y divide-outline-variant/10">
+                        <tr class="hover:bg-surface-container-highest/40 transition-colors">
+                            <td class="px-6 py-4 text-primary font-headline">MTR-1042</td>
+                            <td class="px-6 py-4 text-secondary">Marmara</td>
+                            <td class="px-6 py-4 text-right">32,8</td>
+                            <td class="px-6 py-4 text-right">229</td>
+                            <td class="px-6 py-4 text-right text-on-surface-variant">10.04.2026 14:15</td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-highest/40 transition-colors">
+                            <td class="px-6 py-4 text-primary font-headline">MTR-2891</td>
+                            <td class="px-6 py-4 text-secondary">Ege</td>
+                            <td class="px-6 py-4 text-right">27,1</td>
+                            <td class="px-6 py-4 text-right">226</td>
+                            <td class="px-6 py-4 text-right text-on-surface-variant">10.04.2026 14:15</td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-highest/40 transition-colors">
+                            <td class="px-6 py-4 text-primary font-headline">MTR-5503</td>
+                            <td class="px-6 py-4 text-secondary">İç Anadolu</td>
+                            <td class="px-6 py-4 text-right">40,3</td>
+                            <td class="px-6 py-4 text-right">231</td>
+                            <td class="px-6 py-4 text-right text-on-surface-variant">10.04.2026 14:00</td>
+                        </tr>
+                        <tr class="hover:bg-surface-container-highest/40 transition-colors">
+                            <td class="px-6 py-4 text-primary font-headline">MTR-7810</td>
+                            <td class="px-6 py-4 text-secondary">Akdeniz</td>
+                            <td class="px-6 py-4 text-right">22,4</td>
+                            <td class="px-6 py-4 text-right">224</td>
+                            <td class="px-6 py-4 text-right text-on-surface-variant">10.04.2026 14:00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>

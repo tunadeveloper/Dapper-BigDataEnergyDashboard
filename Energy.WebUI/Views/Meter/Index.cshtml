@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Sayaçlar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="md:pl-64 pt-16 min-h-screen bg-surface">
+    <div class="p-8 space-y-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-headline font-bold text-primary tracking-tight">Sayaç Yönetimi</h1>
+                <p class="text-sm text-secondary">Saha sayaç envanteri ve bağlantı durumu</p>
+            </div>
+            <button class="px-4 py-2 rounded-lg bg-primary-container/20 text-primary text-xs font-headline uppercase tracking-wider border border-primary-container/30">Yeni Sayaç</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Toplam sayaç</div>
+                <div class="text-3xl font-headline font-bold text-primary">12.480</div>
+                <div class="text-xs text-primary-fixed-dim mt-2">Son 30 günde +184</div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Aktif sayaç</div>
+                <div class="text-3xl font-headline font-bold text-primary">12.132</div>
+                <div class="text-xs text-[#00D1FF] mt-2">Aktiflik oranı %97,2</div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Arızalı sayaç</div>
+                <div class="text-3xl font-headline font-bold text-primary">126</div>
+                <div class="text-xs text-on-surface-variant mt-2">Bakım planında 54 cihaz</div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Bağlantı gücü</div>
+                <div class="text-3xl font-headline font-bold text-primary">%99,1</div>
+                <div class="text-xs text-on-surface-variant mt-2">Son kontrol: 5 dk önce</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-10 gap-6">
+            <section class="lg:col-span-6 bg-surface-container-low rounded-xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-headline font-bold text-primary">Bölgeye Göre Sayaç Dağılımı</h2>
+                    <span class="text-[10px] px-3 py-1 rounded bg-surface-container-high text-secondary uppercase tracking-wider">Statik Önizleme</span>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs text-secondary mb-1"><span>Marmara</span><span>3.420</span></div>
+                        <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-primary-container" style="width: 85%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-secondary mb-1"><span>İç Anadolu</span><span>2.980</span></div>
+                        <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#74F5FF]" style="width: 74%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-secondary mb-1"><span>Ege</span><span>2.214</span></div>
+                        <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#3A494B]" style="width: 55%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-secondary mb-1"><span>Akdeniz</span><span>1.870</span></div>
+                        <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#AAB4D4]" style="width: 46%"></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="lg:col-span-4 bg-surface-container-low rounded-xl p-6">
+                <h2 class="text-lg font-headline font-bold text-primary mb-4">Cihaz Tipi Dağılımı</h2>
+                <div class="space-y-3 text-sm">
+                    <div class="flex items-center justify-between px-4 py-3 rounded-lg bg-surface-container-high">
+                        <span class="text-secondary">Tek Faz</span>
+                        <span class="text-primary font-headline">6.940</span>
+                    </div>
+                    <div class="flex items-center justify-between px-4 py-3 rounded-lg bg-surface-container-high">
+                        <span class="text-secondary">Üç Faz</span>
+                        <span class="text-primary font-headline">4.610</span>
+                    </div>
+                    <div class="flex items-center justify-between px-4 py-3 rounded-lg bg-surface-container-high">
+                        <span class="text-secondary">Endüstriyel</span>
+                        <span class="text-primary font-headline">930</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>

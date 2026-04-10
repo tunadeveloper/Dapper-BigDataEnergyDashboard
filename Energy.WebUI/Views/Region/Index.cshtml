@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Bölgeler";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="md:pl-64 pt-16 min-h-screen bg-surface">
+    <div class="p-8 space-y-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-headline font-bold text-primary tracking-tight">Bölge Yönetimi</h1>
+                <p class="text-sm text-secondary">Şebeke bölgeleri, tüketim ve büyüme özeti</p>
+            </div>
+            <button class="px-4 py-2 rounded-lg bg-primary-container/20 text-primary text-xs font-headline uppercase tracking-wider border border-primary-container/30">Bölge Ekle</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Toplam bölge</div>
+                <div class="text-3xl font-headline font-bold text-primary">7</div>
+                <div class="text-xs text-primary-fixed-dim mt-2">2 yeni alt bölge planlandı</div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">En yüksek tüketim</div>
+                <div class="text-3xl font-headline font-bold text-primary">Marmara</div>
+                <div class="text-xs text-[#00D1FF] mt-2">Aylık 412 MWh</div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">En hızlı büyüme</div>
+                <div class="text-3xl font-headline font-bold text-primary">Doğu Anadolu</div>
+                <div class="text-xs text-on-surface-variant mt-2">Çeyreklik +%8,4</div>
+            </div>
+            <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Ortalama kayıp</div>
+                <div class="text-3xl font-headline font-bold text-primary">%3,1</div>
+                <div class="text-xs text-on-surface-variant mt-2">Hedef: %2,8</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-10 gap-6">
+            <section class="lg:col-span-6 bg-surface-container-low rounded-xl p-6">
+                <h2 class="text-lg font-headline font-bold text-primary mb-6">Bölgesel Performans Kartları</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <article class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/20">
+                        <div class="text-sm text-secondary">Marmara</div>
+                        <div class="text-xl font-headline text-primary mt-1">412 MWh</div>
+                        <div class="text-xs text-on-surface-variant mt-2">Kayıp oranı %2,9</div>
+                    </article>
+                    <article class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/20">
+                        <div class="text-sm text-secondary">İç Anadolu</div>
+                        <div class="text-xl font-headline text-primary mt-1">356 MWh</div>
+                        <div class="text-xs text-on-surface-variant mt-2">Kayıp oranı %3,2</div>
+                    </article>
+                    <article class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/20">
+                        <div class="text-sm text-secondary">Ege</div>
+                        <div class="text-xl font-headline text-primary mt-1">298 MWh</div>
+                        <div class="text-xs text-on-surface-variant mt-2">Kayıp oranı %2,7</div>
+                    </article>
+                    <article class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/20">
+                        <div class="text-sm text-secondary">Akdeniz</div>
+                        <div class="text-xl font-headline text-primary mt-1">264 MWh</div>
+                        <div class="text-xs text-on-surface-variant mt-2">Kayıp oranı %3,0</div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="lg:col-span-4 bg-surface-container-low rounded-xl p-6">
+                <h2 class="text-lg font-headline font-bold text-primary mb-6">Bölge Payları</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-secondary">Marmara</span>
+                        <span class="text-primary">%27</span>
+                    </div>
+                    <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-primary-container" style="width: 27%"></div></div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-secondary">İç Anadolu</span>
+                        <span class="text-primary">%23</span>
+                    </div>
+                    <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#74F5FF]" style="width: 23%"></div></div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-secondary">Ege</span>
+                        <span class="text-primary">%20</span>
+                    </div>
+                    <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#BCC6E6]" style="width: 20%"></div></div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-secondary">Akdeniz</span>
+                        <span class="text-primary">%18</span>
+                    </div>
+                    <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#3A494B]" style="width: 18%"></div></div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
