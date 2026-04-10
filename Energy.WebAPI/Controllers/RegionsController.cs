@@ -21,6 +21,12 @@ namespace Energy.WebAPI.Controllers
             return Ok(await _regionService.GetListAsync());
         }
 
+        [HttpGet("overview")]
+        public async Task<ActionResult<RegionOverviewDto>> GetOverview()
+        {
+            return Ok(await _regionService.GetOverviewAsync());
+        }
+
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ResultRegionDTO>> GetById(int id)
         {

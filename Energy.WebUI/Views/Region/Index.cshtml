@@ -1,6 +1,9 @@
+@model List<RegionOverviewItemDto>
+@using System.Globalization
 @{
     ViewData["Title"] = "Bölgeler";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var tr = CultureInfo.GetCultureInfo("tr-TR");
 }
 
 <main class="md:pl-64 pt-16 min-h-screen bg-surface">
@@ -16,23 +19,23 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
                 <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Toplam bölge</div>
-                <div class="text-3xl font-headline font-bold text-primary">7</div>
-                <div class="text-xs text-primary-fixed-dim mt-2">2 yeni alt bölge planlandı</div>
+                <div class="text-3xl font-headline font-bold text-primary">@(Convert.ToInt32(ViewBag.TotalRegionCount ?? 0).ToString("N0", tr))</div>
+                <div class="text-xs text-primary-fixed-dim mt-2">Sistemde tanımlı bölge adedi</div>
             </div>
             <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
                 <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">En yüksek tüketim</div>
-                <div class="text-3xl font-headline font-bold text-primary">Marmara</div>
-                <div class="text-xs text-[#00D1FF] mt-2">Aylık 412 MWh</div>
+                <div class="text-3xl font-headline font-bold text-primary">@(ViewBag.TopConsumptionRegionName ?? "-")</div>
+                <div class="text-xs text-[#00D1FF] mt-2">@(Convert.ToDecimal(ViewBag.TopConsumptionValue ?? 0m).ToString("N0", tr)) kWh</div>
             </div>
             <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
-                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">En hızlı büyüme</div>
-                <div class="text-3xl font-headline font-bold text-primary">Doğu Anadolu</div>
-                <div class="text-xs text-on-surface-variant mt-2">Çeyreklik +%8,4</div>
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">En çok sayaç</div>
+                <div class="text-3xl font-headline font-bold text-primary">@(ViewBag.TopMeterRegionName ?? "-")</div>
+                <div class="text-xs text-on-surface-variant mt-2">@(Convert.ToInt32(ViewBag.TopMeterRegionCount ?? 0).ToString("N0", tr)) sayaç</div>
             </div>
             <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
-                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Ortalama kayıp</div>
-                <div class="text-3xl font-headline font-bold text-primary">%3,1</div>
-                <div class="text-xs text-on-surface-variant mt-2">Hedef: %2,8</div>
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Ortalama voltaj</div>
+                <div class="text-3xl font-headline font-bold text-primary">@(Convert.ToDecimal(ViewBag.AverageVoltage ?? 0m).ToString("N0", tr)) V</div>
+                <div class="text-xs text-on-surface-variant mt-2">Tüm bölge okumalarının ortalaması</div>
             </div>
         </div>
 
@@ -40,52 +43,28 @@
             <section class="lg:col-span-6 bg-surface-container-low rounded-xl p-6">
                 <h2 class="text-lg font-headline font-bold text-primary mb-6">Bölgesel Performans Kartları</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <article class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/20">
-                        <div class="text-sm text-secondary">Marmara</div>
-                        <div class="text-xl font-headline text-primary mt-1">412 MWh</div>
-                        <div class="text-xs text-on-surface-variant mt-2">Kayıp oranı %2,9</div>
-                    </article>
-                    <article class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/20">
-                        <div class="text-sm text-secondary">İç Anadolu</div>
-                        <div class="text-xl font-headline text-primary mt-1">356 MWh</div>
-                        <div class="text-xs text-on-surface-variant mt-2">Kayıp oranı %3,2</div>
-                    </article>
-                    <article class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/20">
-                        <div class="text-sm text-secondary">Ege</div>
-                        <div class="text-xl font-headline text-primary mt-1">298 MWh</div>
-                        <div class="text-xs text-on-surface-variant mt-2">Kayıp oranı %2,7</div>
-                    </article>
-                    <article class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/20">
-                        <div class="text-sm text-secondary">Akdeniz</div>
-                        <div class="text-xl font-headline text-primary mt-1">264 MWh</div>
-                        <div class="text-xs text-on-surface-variant mt-2">Kayıp oranı %3,0</div>
-                    </article>
+                    @foreach (var item in Model ?? new List<RegionOverviewItemDto>())
+                    {
+                        <article class="p-4 rounded-lg bg-surface-container-high border border-outline-variant/20">
+                            <div class="text-sm text-secondary">@item.RegionName</div>
+                            <div class="text-xl font-headline text-primary mt-1">@item.TotalConsumption.ToString("N0", tr) kWh</div>
+                            <div class="text-xs text-on-surface-variant mt-2">Sayaç: @item.MeterCount | Voltaj: @item.AverageVoltage.ToString("N0", tr) V</div>
+                        </article>
+                    }
                 </div>
             </section>
 
             <section class="lg:col-span-4 bg-surface-container-low rounded-xl p-6">
                 <h2 class="text-lg font-headline font-bold text-primary mb-6">Bölge Payları</h2>
                 <div class="space-y-4">
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-secondary">Marmara</span>
-                        <span class="text-primary">%27</span>
-                    </div>
-                    <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-primary-container" style="width: 27%"></div></div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-secondary">İç Anadolu</span>
-                        <span class="text-primary">%23</span>
-                    </div>
-                    <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#74F5FF]" style="width: 23%"></div></div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-secondary">Ege</span>
-                        <span class="text-primary">%20</span>
-                    </div>
-                    <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#BCC6E6]" style="width: 20%"></div></div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-secondary">Akdeniz</span>
-                        <span class="text-primary">%18</span>
-                    </div>
-                    <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#3A494B]" style="width: 18%"></div></div>
+                    @foreach (var item in Model ?? new List<RegionOverviewItemDto>())
+                    {
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-secondary">@item.RegionName</span>
+                            <span class="text-primary">%@item.SharePercent.ToString("N1", tr)</span>
+                        </div>
+                        <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-primary-container" style="width: @Math.Min(100m, item.SharePercent).ToString("N1", CultureInfo.InvariantCulture)%"></div></div>
+                    }
                 </div>
             </section>
         </div>

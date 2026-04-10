@@ -10,5 +10,6 @@ namespace Energy.WebAPI.Repositories.MeterReadings
         Task DeleteAsync(long id);
         Task<ResultMeterReadingDTO> GetByIdAsync(long id);
         Task<List<ResultMeterReadingWithRegionDTO>> GetListWithRegionAsync();
+        Task<MeterReadingOverviewDto> GetOverviewAsync();
     }
 }

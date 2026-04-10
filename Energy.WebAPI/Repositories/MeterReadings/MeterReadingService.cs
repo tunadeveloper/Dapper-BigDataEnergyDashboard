@@ -10,6 +10,9 @@ namespace Energy.WebAPI.Repositories.MeterReadings
     {
         private const string MeterReadingListKey = "meterreadings:list";
         private const string MeterReadingListWithRegionKey = "meterreadings:list:region";
+        private const string MeterReadingOverviewKey = "meterreadings:overview";
+        private const string MeterOverviewKey = "meters:overview";
+        private const string RegionOverviewKey = "regions:overview";
         private static string MeterReadingByIdKey(long id) => $"meterreadings:{id}";
         private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(15);
 
@@ -30,6 +33,9 @@ namespace Energy.WebAPI.Repositories.MeterReadings
             await connection.ExecuteAsync(sql, createMeterReadingDTO);
             _cache.RemoveData(MeterReadingListKey);
             _cache.RemoveData(MeterReadingListWithRegionKey);
+            _cache.RemoveData(MeterReadingOverviewKey);
+            _cache.RemoveData(MeterOverviewKey);
+            _cache.RemoveData(RegionOverviewKey);
         }
 
         public async Task DeleteAsync(long id)
@@ -40,6 +46,9 @@ namespace Energy.WebAPI.Repositories.MeterReadings
             await connection.ExecuteAsync(sql, new { Id = id });
             _cache.RemoveData(MeterReadingListKey);
             _cache.RemoveData(MeterReadingListWithRegionKey);
+            _cache.RemoveData(MeterReadingOverviewKey);
+            _cache.RemoveData(MeterOverviewKey);
+            _cache.RemoveData(RegionOverviewKey);
             _cache.RemoveData(MeterReadingByIdKey(id));
         }
 
@@ -86,6 +95,24 @@ namespace Energy.WebAPI.Repositories.MeterReadings
             return list;
         }
 
+        public async Task<MeterReadingOverviewDto> GetOverviewAsync()
+        {
+            var cached = _cache.GetData<MeterReadingOverviewDto>(MeterReadingOverviewKey);
+            if (cached != null)
+                return cached;
+
+            var utcNow = DateTime.UtcNow;
+            var dayStart = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, 0, 0, 0, DateTimeKind.Utc);
+            const string sql = "SELECT ISNULL(SUM(CASE WHEN ReadingDate >= @DayStart THEN 1 ELSE 0 END), 0) AS TodayReadingCount, ISNULL(SUM(Consumption), 0) AS TotalConsumption, ISNULL(AVG(CAST(Voltage AS DECIMAL(18,2))), 0) AS AverageVoltage, ISNULL(SUM(CASE WHEN Voltage < 210 OR Voltage > 240 THEN 1 ELSE 0 END), 0) AS AnomalyCount FROM MeterReadings; SELECT TOP (20) mr.Id, mr.MeterId, mr.Consumption, mr.Voltage, mr.ReadingDate, mr.TariffType, reg.RegionName FROM MeterReadings mr INNER JOIN Meters m ON mr.MeterId = m.Id INNER JOIN Regions reg ON m.RegionId = reg.Id ORDER BY mr.ReadingDate DESC;";
+            await using var connection = (SqlConnection)_context.CreateConnection();
+            await connection.OpenAsync();
+            using var multi = await connection.QueryMultipleAsync(sql, new { DayStart = dayStart });
+            var overview = await multi.ReadFirstAsync<MeterReadingOverviewDto>();
+            overview.LatestReadings = (await multi.ReadAsync<ResultMeterReadingWithRegionDTO>()).ToList();
+            _cache.SetData(MeterReadingOverviewKey, overview, CacheTtl);
+            return overview;
+        }
+
         public async Task UpdateAsync(UpdateMeterReadingDTO updateMeterReadingDTO)
         {
             const string sql = "UPDATE MeterReadings SET MeterId = @MeterId, Consumption = @Consumption, Voltage = @Voltage, ReadingDate = @ReadingDate, TariffType = @TariffType WHERE Id = @Id";
@@ -94,6 +121,9 @@ namespace Energy.WebAPI.Repositories.MeterReadings
             await connection.ExecuteAsync(sql, updateMeterReadingDTO);
             _cache.RemoveData(MeterReadingListKey);
             _cache.RemoveData(MeterReadingListWithRegionKey);
+            _cache.RemoveData(MeterReadingOverviewKey);
+            _cache.RemoveData(MeterOverviewKey);
+            _cache.RemoveData(RegionOverviewKey);
             _cache.RemoveData(MeterReadingByIdKey(updateMeterReadingDTO.Id));
         }
     }

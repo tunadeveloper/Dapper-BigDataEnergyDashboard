@@ -5,6 +5,7 @@ namespace Energy.WebAPI.Repositories.Regions
     public interface IRegionService
     {
         Task<List<ResultRegionDTO>> GetListAsync();
+        Task<RegionOverviewDto> GetOverviewAsync();
         Task CreateAsync(CreateRegionDTO createRegionDTO);
         Task UpdateAsync(UpdateRegionDTO updateRegionDTO);
         Task DeleteAsync(int id);

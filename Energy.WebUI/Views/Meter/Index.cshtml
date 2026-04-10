@@ -16,23 +16,23 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
                 <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Toplam sayaç</div>
-                <div class="text-3xl font-headline font-bold text-primary">12.480</div>
-                <div class="text-xs text-primary-fixed-dim mt-2">Son 30 günde +184</div>
+                <div class="text-3xl font-headline font-bold text-primary">@(ViewBag.TotalMeterCount ?? 0)</div>
+                <div class="text-xs text-primary-fixed-dim mt-2">Canlı envanter</div>
             </div>
             <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
                 <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Aktif sayaç</div>
-                <div class="text-3xl font-headline font-bold text-primary">12.132</div>
-                <div class="text-xs text-[#00D1FF] mt-2">Aktiflik oranı %97,2</div>
+                <div class="text-3xl font-headline font-bold text-primary">@(ViewBag.ActiveMeterCount ?? 0)</div>
+                <div class="text-xs text-[#00D1FF] mt-2">Aktiflik oranı %@(ViewBag.ActiveRate ?? 0)</div>
             </div>
             <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
-                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Arızalı sayaç</div>
-                <div class="text-3xl font-headline font-bold text-primary">126</div>
-                <div class="text-xs text-on-surface-variant mt-2">Bakım planında 54 cihaz</div>
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Pasif sayaç</div>
+                <div class="text-3xl font-headline font-bold text-primary">@(ViewBag.PassiveMeterCount ?? 0)</div>
+                <div class="text-xs text-on-surface-variant mt-2">Bağlantı dışı sayaç adedi</div>
             </div>
             <div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-transparent hover:border-primary-container transition-all">
-                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Bağlantı gücü</div>
-                <div class="text-3xl font-headline font-bold text-primary">%99,1</div>
-                <div class="text-xs text-on-surface-variant mt-2">Son kontrol: 5 dk önce</div>
+                <div class="text-xs uppercase tracking-[2px] text-secondary mb-2">Bu ay eklenen</div>
+                <div class="text-3xl font-headline font-bold text-primary">@(ViewBag.NewThisMonthCount ?? 0)</div>
+                <div class="text-xs text-on-surface-variant mt-2">Ay başından beri yeni abonelik</div>
             </div>
         </div>
 
@@ -40,45 +40,53 @@
             <section class="lg:col-span-6 bg-surface-container-low rounded-xl p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-lg font-headline font-bold text-primary">Bölgeye Göre Sayaç Dağılımı</h2>
-                    <span class="text-[10px] px-3 py-1 rounded bg-surface-container-high text-secondary uppercase tracking-wider">Statik Önizleme</span>
+                    <span class="text-[10px] px-3 py-1 rounded bg-surface-container-high text-secondary uppercase tracking-wider">Canlı Veri</span>
                 </div>
-                <div class="space-y-4">
-                    <div>
-                        <div class="flex justify-between text-xs text-secondary mb-1"><span>Marmara</span><span>3.420</span></div>
-                        <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-primary-container" style="width: 85%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs text-secondary mb-1"><span>İç Anadolu</span><span>2.980</span></div>
-                        <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#74F5FF]" style="width: 74%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs text-secondary mb-1"><span>Ege</span><span>2.214</span></div>
-                        <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#3A494B]" style="width: 55%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs text-secondary mb-1"><span>Akdeniz</span><span>1.870</span></div>
-                        <div class="w-full h-2 rounded bg-surface-container-high"><div class="h-2 rounded bg-[#AAB4D4]" style="width: 46%"></div></div>
-                    </div>
-                </div>
+                <script type="application/json" id="meter-region-json">@(Html.Raw(ViewBag.RegionDistributionJson as string ?? "[]"))</script>
+                <div class="space-y-4" id="meter-region-list"></div>
             </section>
 
             <section class="lg:col-span-4 bg-surface-container-low rounded-xl p-6">
-                <h2 class="text-lg font-headline font-bold text-primary mb-4">Cihaz Tipi Dağılımı</h2>
-                <div class="space-y-3 text-sm">
-                    <div class="flex items-center justify-between px-4 py-3 rounded-lg bg-surface-container-high">
-                        <span class="text-secondary">Tek Faz</span>
-                        <span class="text-primary font-headline">6.940</span>
-                    </div>
-                    <div class="flex items-center justify-between px-4 py-3 rounded-lg bg-surface-container-high">
-                        <span class="text-secondary">Üç Faz</span>
-                        <span class="text-primary font-headline">4.610</span>
-                    </div>
-                    <div class="flex items-center justify-between px-4 py-3 rounded-lg bg-surface-container-high">
-                        <span class="text-secondary">Endüstriyel</span>
-                        <span class="text-primary font-headline">930</span>
-                    </div>
-                </div>
+                <h2 class="text-lg font-headline font-bold text-primary mb-4">Tarife Tipi Dağılımı</h2>
+                <script type="application/json" id="meter-tariff-json">@(Html.Raw(ViewBag.TariffDistributionJson as string ?? "[]"))</script>
+                <div class="space-y-3 text-sm" id="meter-tariff-list"></div>
             </section>
         </div>
     </div>
 </main>
+
+<script>
+    (function () {
+        var regionRaw = document.getElementById("meter-region-json");
+        var tariffRaw = document.getElementById("meter-tariff-json");
+        var regionList = document.getElementById("meter-region-list");
+        var tariffList = document.getElementById("meter-tariff-list");
+        if (!regionRaw || !tariffRaw || !regionList || !tariffList) return;
+
+        var regionsParsed = JSON.parse(regionRaw.textContent || "[]");
+        var tariffsParsed = JSON.parse(tariffRaw.textContent || "[]");
+        var regions = Array.isArray(regionsParsed) ? regionsParsed : [];
+        var tariffs = Array.isArray(tariffsParsed) ? tariffsParsed : [];
+        var regionColors = ["bg-primary-container", "bg-[#74F5FF]", "bg-[#3A494B]", "bg-[#AAB4D4]", "bg-[#7EE787]"];
+        var regionMax = regions.length ? Math.max.apply(null, regions.map(function (x) { return Number(x.Count || x.count || 0); })) : 0;
+
+        regionList.innerHTML = regions.length ? regions.map(function (item, i) {
+            var name = item.Name || item.name || "-";
+            var count = Number(item.Count || item.count || 0);
+            var width = regionMax > 0 ? Math.max(6, Math.round((count / regionMax) * 100)) : 0;
+            return "<div>" +
+                "<div class=\"flex justify-between text-xs text-secondary mb-1\"><span>" + name + "</span><span>" + count + "</span></div>" +
+                "<div class=\"w-full h-2 rounded bg-surface-container-high\"><div class=\"h-2 rounded " + regionColors[i % regionColors.length] + "\" style=\"width: " + width + "%\"></div></div>" +
+                "</div>";
+        }).join("") : "<div class=\"text-xs text-secondary\">Bölge verisi bulunamadı.</div>";
+
+        tariffList.innerHTML = tariffs.length ? tariffs.map(function (item) {
+            var name = item.Name || item.name || "-";
+            var count = Number(item.Count || item.count || 0);
+            return "<div class=\"flex items-center justify-between px-4 py-3 rounded-lg bg-surface-container-high\">" +
+                "<span class=\"text-secondary\">" + name + "</span>" +
+                "<span class=\"text-primary font-headline\">" + count + "</span>" +
+                "</div>";
+        }).join("") : "<div class=\"text-xs text-secondary\">Tarife verisi bulunamadı.</div>";
+    })();
+</script>

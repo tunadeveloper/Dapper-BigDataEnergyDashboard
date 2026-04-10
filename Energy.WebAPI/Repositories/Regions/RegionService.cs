@@ -9,6 +9,7 @@ namespace Energy.WebAPI.Repositories.Regions
     public class RegionService : IRegionService
     {
         private const string RegionListKey = "regions:list";
+        private const string RegionOverviewKey = "regions:overview";
         private static string RegionByIdKey(int id) => $"regions:{id}";
         private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(15);
 
@@ -28,6 +29,7 @@ namespace Energy.WebAPI.Repositories.Regions
             await connection.OpenAsync();
             await connection.ExecuteAsync(sql, createRegionDTO);
             _cache.RemoveData(RegionListKey);
+            _cache.RemoveData(RegionOverviewKey);
         }
 
         public async Task DeleteAsync(int id)
@@ -37,6 +39,7 @@ namespace Energy.WebAPI.Repositories.Regions
             await connection.OpenAsync();
             await connection.ExecuteAsync(sql, new { Id = id });
             _cache.RemoveData(RegionListKey);
+            _cache.RemoveData(RegionOverviewKey);
             _cache.RemoveData(RegionByIdKey(id));
         }
 
@@ -69,6 +72,26 @@ namespace Energy.WebAPI.Repositories.Regions
             return list;
         }
 
+        public async Task<RegionOverviewDto> GetOverviewAsync()
+        {
+            var cached = _cache.GetData<RegionOverviewDto>(RegionOverviewKey);
+            if (cached != null)
+                return cached;
+
+            const string sql = "SELECT (SELECT COUNT(*) FROM Regions) AS TotalRegionCount, ISNULL((SELECT TOP 1 reg.RegionName FROM MeterReadings mr INNER JOIN Meters m ON mr.MeterId = m.Id INNER JOIN Regions reg ON m.RegionId = reg.Id GROUP BY reg.RegionName ORDER BY SUM(mr.Consumption) DESC), '-') AS TopConsumptionRegionName, ISNULL((SELECT TOP 1 SUM(mr.Consumption) FROM MeterReadings mr INNER JOIN Meters m ON mr.MeterId = m.Id INNER JOIN Regions reg ON m.RegionId = reg.Id GROUP BY reg.RegionName ORDER BY SUM(mr.Consumption) DESC), 0) AS TopConsumptionValue, ISNULL((SELECT TOP 1 reg.RegionName FROM Regions reg LEFT JOIN Meters m ON m.RegionId = reg.Id GROUP BY reg.RegionName ORDER BY COUNT(m.Id) DESC), '-') AS TopMeterRegionName, ISNULL((SELECT TOP 1 COUNT(m.Id) FROM Regions reg LEFT JOIN Meters m ON m.RegionId = reg.Id GROUP BY reg.RegionName ORDER BY COUNT(m.Id) DESC), 0) AS TopMeterRegionCount, ISNULL((SELECT AVG(CAST(mr.Voltage AS DECIMAL(18,2))) FROM MeterReadings mr), 0) AS AverageVoltage; SELECT reg.RegionName, ISNULL(SUM(mr.Consumption), 0) AS TotalConsumption, COUNT(DISTINCT m.Id) AS MeterCount, ISNULL(AVG(CAST(mr.Voltage AS DECIMAL(18,2))), 0) AS AverageVoltage FROM Regions reg LEFT JOIN Meters m ON m.RegionId = reg.Id LEFT JOIN MeterReadings mr ON mr.MeterId = m.Id GROUP BY reg.RegionName ORDER BY TotalConsumption DESC;";
+            await using var connection = (SqlConnection)_context.CreateConnection();
+            await connection.OpenAsync();
+            using var multi = await connection.QueryMultipleAsync(sql);
+            var overview = await multi.ReadFirstAsync<RegionOverviewDto>();
+            var rows = (await multi.ReadAsync<RegionOverviewItemDto>()).ToList();
+            var totalConsumption = rows.Sum(x => x.TotalConsumption);
+            foreach (var row in rows)
+                row.SharePercent = totalConsumption == 0 ? 0 : Math.Round(row.TotalConsumption * 100 / totalConsumption, 1);
+            overview.Regions = rows;
+            _cache.SetData(RegionOverviewKey, overview, CacheTtl);
+            return overview;
+        }
+
         public async Task UpdateAsync(UpdateRegionDTO updateRegionDTO)
         {
             const string sql = "UPDATE Regions SET RegionName = @RegionName WHERE Id = @Id";
@@ -76,6 +99,7 @@ namespace Energy.WebAPI.Repositories.Regions
             await connection.OpenAsync();
             await connection.ExecuteAsync(sql, updateRegionDTO);
             _cache.RemoveData(RegionListKey);
+            _cache.RemoveData(RegionOverviewKey);
             _cache.RemoveData(RegionByIdKey(updateRegionDTO.Id));
         }
     }

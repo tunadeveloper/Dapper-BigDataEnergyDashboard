@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject IConfiguration Configuration
+<!DOCTYPE html>
 
 <html class="dark" lang="tr">
 <head>
@@ -114,6 +115,10 @@
                     <input class="bg-surface-container-lowest border-none focus:bg-surface-bright focus:ring-0 text-sm py-2 pl-10 pr-4 w-64 rounded-lg transition-all border-b-2 border-transparent focus:border-primary-container" placeholder="Sistemlerde ara..." type="text" />
                 </div>
                 <div class="flex items-center gap-4">
+                    <div id="redis-pulse-status" class="hidden xl:flex items-center gap-2 px-3 py-2 bg-surface-container-highest border border-primary/20 rounded-lg text-[11px] font-headline tracking-wide uppercase text-primary">
+                        <span id="redis-pulse-dot" class="w-2 h-2 rounded-full bg-[#00D1FF]"></span>
+                        <span id="redis-pulse-text">Redis: - sn | - ms</span>
+                    </div>
                     <button class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest border border-primary/20 rounded-lg text-xs font-headline tracking-wider uppercase text-primary hover:bg-surface-bright transition-all active:scale-95">
                         <span class="material-symbols-outlined text-sm">calendar_today</span>
                         Tarih aralığı
@@ -188,5 +193,52 @@
             <span class="text-[10px] font-bold uppercase tracking-tighter">Sayaç</span>
         </a>
     </nav>
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+    <script>
+        (function () {
+            var apiBase = "@(Configuration["EnergyApi:BaseUrl"] ?? "https://localhost:7278/")";
+            var hubUrl = String(apiBase).replace(/\/$/, "") + "/hubs/energy";
+            var textEl = document.getElementById("redis-pulse-text");
+            var dotEl = document.getElementById("redis-pulse-dot");
+            if (!textEl || !dotEl || !window.signalR) return;
+            var lastPull = null;
+            var durationMs = 0;
+            function render() {
+                if (!lastPull) {
+                    textEl.textContent = "Redis: - sn | - ms";
+                    return;
+                }
+                var sec = Math.max(0, Math.floor((Date.now() - lastPull.getTime()) / 1000));
+                textEl.textContent = "Redis: " + sec + " sn | " + durationMs + " ms";
+            }
+            setInterval(render, 1000);
+            var connection = new signalR.HubConnectionBuilder().withUrl(hubUrl).withAutomaticReconnect().build();
+            connection.on("ReceiveRedisPullStatus", function (payload) {
+                var iso = payload && (payload.lastPullAtUtc || payload.LastPullAtUtc);
+                durationMs = Number(payload && (payload.pullDurationMs || payload.PullDurationMs || 0)) || 0;
+                var isHealthy = Boolean(payload && (payload.isHealthy || payload.IsHealthy));
+                lastPull = iso ? new Date(iso) : new Date();
+                dotEl.style.backgroundColor = isHealthy ? "#00D1FF" : "#ff6b6b";
+                render();
+            });
+            connection.onclose(function () {
+                dotEl.style.backgroundColor = "#ff6b6b";
+                textEl.textContent = "Redis: baglanti yok";
+            });
+            connection.onreconnected(function () {
+                dotEl.style.backgroundColor = "#00D1FF";
+            });
+            function startConnection() {
+                connection.start().then(function () {
+                    dotEl.style.backgroundColor = "#00D1FF";
+                }).catch(function () {
+                    dotEl.style.backgroundColor = "#ff6b6b";
+                    textEl.textContent = "Redis: baglanti yok";
+                    setTimeout(startConnection, 3000);
+                });
+            }
+            startConnection();
+        })();
+    </script>
 </body>
 </html>

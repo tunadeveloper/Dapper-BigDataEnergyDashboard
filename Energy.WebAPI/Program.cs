@@ -5,11 +5,23 @@ using Energy.WebAPI.Repositories.Dashboard;
 using Energy.WebAPI.Repositories.MeterReadings;
 using Energy.WebAPI.Repositories.Meters;
 using Energy.WebAPI.Repositories.Regions;
+using Energy.WebAPI.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("SignalRClient", policy =>
+    {
+        policy
+            .SetIsOriginAllowed(_ => true)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 builder.Services.AddSignalR();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<DapperContext>();
@@ -18,6 +30,7 @@ builder.Services.AddScoped<IMeterService, MeterService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
 builder.Services.AddScoped<IMeterReadingService, MeterReadingService>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddHostedService<RedisPulseBroadcastService>();
 
 var app = builder.Build();
 
@@ -34,6 +47,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("SignalRClient");
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<EnergyHub>("/hubs/energy");

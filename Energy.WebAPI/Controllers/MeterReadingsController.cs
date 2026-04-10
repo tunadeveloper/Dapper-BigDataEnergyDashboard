@@ -27,6 +27,12 @@ namespace Energy.WebAPI.Controllers
             return Ok(await _meterReadingService.GetListWithRegionAsync());
         }
 
+        [HttpGet("overview")]
+        public async Task<ActionResult<MeterReadingOverviewDto>> GetOverview()
+        {
+            return Ok(await _meterReadingService.GetOverviewAsync());
+        }
+
         [HttpGet("{id:long}")]
         public async Task<ActionResult<ResultMeterReadingDTO>> GetById(long id)
         {
